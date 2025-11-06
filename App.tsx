@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from './src/contexts/AuthContext';
 import { useSubscription } from './src/hooks/useSubscription';
+import { useCourses } from './src/hooks/useCourses';
 import SidebarWrapper from './components/SidebarWrapper';
 import Header from './components/Header';
 import AgentView from './components/AgentView';
@@ -16,6 +17,7 @@ import type { ViewType, Video, AgentType } from './types';
 function App() {
   const { user, loading: authLoading } = useAuth();
   const { hasSubscription } = useSubscription();
+  const { courses, loading: coursesLoading, error: coursesError } = useCourses({ enabled: !!user });
   const [showLogin, setShowLogin] = useState(false);
   const [showPaywall, setShowPaywall] = useState(false);
   const [currentView, setCurrentView] = useState<ViewType>('content');
@@ -83,13 +85,42 @@ function App() {
           </div>
         );
       case 'content':
-        return <ContentView onVideoSelect={(video, playlist) => setSelectedCourse({ video, playlist })} />;
+        if (coursesLoading) {
+          return (
+            <div className="flex items-center justify-center h-full">
+              <div className="text-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto"></div>
+                <p className="mt-4 text-gray-400">Carregando cursos...</p>
+              </div>
+            </div>
+          );
+        }
+        if (coursesError) {
+          return (
+            <div className="flex items-center justify-center h-full">
+              <div className="text-center text-red-400">
+                <p>Erro ao carregar cursos: {coursesError}</p>
+              </div>
+            </div>
+          );
+        }
+        return <ContentView courses={courses} onVideoSelect={(video, playlist) => setSelectedCourse({ video, playlist })} />;
       case 'community':
         return <CommunityView />;
       case 'admin':
         return user.role === 'admin' ? <AdminView /> : <div>Acesso negado</div>;
       default:
-        return <ContentView onVideoSelect={(video, playlist) => setSelectedCourse({ video, playlist })} />;
+        if (coursesLoading) {
+          return (
+            <div className="flex items-center justify-center h-full">
+              <div className="text-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto"></div>
+                <p className="mt-4 text-gray-400">Carregando cursos...</p>
+              </div>
+            </div>
+          );
+        }
+        return <ContentView courses={courses} onVideoSelect={(video, playlist) => setSelectedCourse({ video, playlist })} />;
     }
   };
 
