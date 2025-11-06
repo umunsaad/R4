@@ -55,9 +55,11 @@ npm run dev
 ## Recent Changes
 - **2025-11-06**: Initial Replit setup
   - Configured Vite to use port 5000 for Replit compatibility
-  - Added HMR configuration for Replit's proxy environment
+  - Added `allowedHosts: true` to fix Replit proxy blocking
+  - Added HMR configuration for Replit's iframe proxy environment
   - Set up GEMINI_API_KEY in Replit Secrets
   - Installed dependencies
+  - App successfully running and accessible
 
 ## Notes
 - This app was imported from AI Studio (https://ai.studio/apps/drive/16b5ElGbSprtdan1jbs4RNGAE78kxil0q)
