@@ -1,0 +1,5 @@
+{
+  "name": "R4 Academy",
+  "description": "Uma plataforma de video aulas da R4 Academy, com um dashboard inspirado na UI do Google Gemini, com seções para Agentes, Conteúdo e Comunidade.",
+  "requestFramePermissions": []
+}
